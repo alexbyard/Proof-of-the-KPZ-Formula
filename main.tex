@@ -1,0 +1,486 @@
+\documentclass[reqno]{amsart}
+
+\usepackage{
+  amsmath, amsthm, amssymb, mathtools, dsfont, units,          % Math typesetting
+  graphicx, wrapfig, subfig, float,                            % Graphics
+  listings, color, inconsolata, pythonhighlight,               % Code
+  fancyhdr, hyperref, enumerate, enumitem, framed, xcolor}   % Other
+  
+\usepackage{mathrsfs}
+
+\usepackage{pgfplots}
+
+\usepackage{tikz-cd}
+\tikzcdset{scale cd/.style={every label/.append style={scale=#1},
+    cells={nodes={scale=#1}}}}
+
+% Anchor footnotes to bottom
+\usepackage[bottom]{footmisc}
+
+% Adjust line spacing
+\renewcommand{\baselinestretch}{1.07}
+
+% Remove paragraph indentation
+\setlength\parindent{0pt}
+
+% Spacing between paragraphs
+\setlength{\parskip}{1.5mm}
+
+% Allow multi-line equations to break to next page
+\allowdisplaybreaks
+
+% Set page margins
+\usepackage{geometry}\geometry{letterpaper,
+  left=1.45in, right=1.45in,
+  top=1.1in, bottom=1in,
+  headsep=.2in }
+
+% -- Frame settings (for problem statement) --
+\setlength\FrameSep{0.55em}
+\setlength\OuterFrameSep{\partopsep}
+
+% Command for homework problems. Likely not useful for lecture notes, but I included it just in case.
+% Usage: '\question{Problem number}{Problem statement}'
+\newcommand{\question}[2]{\begin{framed}\noindent \textbf{Question #1 --} #2\end{framed}}
+
+\newcommand{\problem}[2]{\begin{framed}\noindent \textbf{Problem #1 -- }#2\end{framed}}
+
+\newcommand{\assignment}[2]{\begin{framed}\noindent \textbf{Assignment #1 -- }#2\end{framed}}
+
+% -- Flush left for 'enumerate' numbers
+%\setlist[enumerate]{wide=0pt, leftmargin=21pt, labelwidth=0pt, align=left}
+%\setenumerate[1]{label={(\arabic*)}}
+
+% -- Settings for internal/external links --
+\hypersetup{colorlinks=true, linkcolor=magenta}
+
+% -- Make reference section title font smaller --
+\renewcommand{\refname}{\normalsize\bf{References}}
+
+% -- Settings for code listings -- You likely won't use this so ignore it
+\definecolor{greenText}{rgb}{0.5, 0.7, 0.5}
+\definecolor{greyText}{rgb}{0.5, 0.5, 0.5}
+\definecolor{codeFrame}{rgb}{0.7, 0.5, 0.5}
+\definecolor{backgroundColor}{rgb}{0.95, 0.95, 0.92}
+\lstdefinestyle{code} {
+% Uncomment the next line (remove %) to add green background to listing
+  %backgroundcolor=\color{backgroundColor},
+% Comment the next line (add %) and the next to remove green border
+  frame=single,
+  rulecolor=\color{greenText},
+  numberstyle=\tiny\color{greyText},
+  commentstyle=\color{greenText},
+  basicstyle=\linespread{1}\ttfamily\footnotesize,
+  keywordstyle=\ttfamily\footnotesize,
+  showstringspaces=false,
+  numbers=left,
+  numbersep=8pt,
+  xleftmargin=1.95em,
+  framexleftmargin=1.6em }
+\lstset{style=code} 
+
+% -- Math/Statistics/Physics commands -- Most regular commands should still work, but these make typing a lot faster. I suggest learning them over time and adding your own commands/changing these when you get comfortable with the newcommand structure
+
+% Add a reference number to a single line of a multi-line equation in align/gather environment. In place of 'name here' you may use any name you want. Any other instances of 'numberthis' using the same 'name here' will increase in count. Otherwise, a new 'name here' will use a different counter, starting back at (1).
+% Usage: '\numberthis\label{(name here)}'
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+% Shortcuts for bold/mathcal math symbols; \bg is for bold Greek letters
+\let\bf\mathbf
+\let\bg\boldsymbol
+\let\mc\mathcal
+\newcommand{\ms}{\mathscr}
+\let\mf\mathfrak
+
+% Normal distribution: first argument is the mean, second argument is the variance
+% Usage: '\normal{\mu}{\sigma}'
+\newcommand{\normal}[2]{\mathcal{N}(#1,#2)}
+
+% Uniform distribution: first parameter is left endpoint, second parameter is right endpoint
+% Usage: '\unif{0}{1}'
+\newcommand{\unif}[2]{\text{Uniform}(#1,#2)}
+
+% Norm: ||#1||_#2; first parameter is vector, second parameter is deliminator for vector space
+% Usage: '\norm{f}{p}'
+\newcommand{\norm}[2]{\left\|#1\right\|_{#2}}
+
+% Sum: first parameter is bottom of sum, second parameter is top
+% Usage: '\s{n=1}{\infty}'
+\newcommand{\s}[2]{\sum_{#1}^{#2}}
+
+% Integral: first parameter is bottom, second is top
+% Usage: '\i{0}{1}'
+\renewcommand{\i}[2]{\int_{#1}^{#2}}
+
+% Integral Variants:
+% Usage '\it{0}{1}{f(t)}'
+\renewcommand{\it}[3]{\int_{#1}^{#2}#3\,dt}
+% Usage '\ix{0}{1}{f(x)}'
+\newcommand{\ix}[3]{\int_{#1}^{#2}#3\,dx}
+% Usage '\iy{0}{1}{f(y)}'
+\newcommand{\iy}[3]{\int_{#1}^{#2}#3\,dy}
+
+% General integral with differential of choice:
+% Usage '\id{0}{1}{f}{\mu}'
+\newcommand{\id}[4]{\int_{#1}^{#2}#3\,d#4}
+\newcommand{\idd}[4]{\int_{#1}^{#2}#3\,d^2#4}
+\newcommand{\im}[4]{\int_{#1}^{#2}#3\,#4}
+
+% Product: first parameter is bottom, second is top
+% Usage: '\p{n=1}{\infty}'
+\newcommand{\p}{\prime}
+
+% Derivative: first parameter is function and second is variable
+% Usage: '\der{f}{x}' or '\der{}{x}'
+\newcommand{\der}[2]{\frac{d#1}{d#2}}
+
+% Partial Derivative: first parameter is function and second is variable
+% Usage: '\pder{f}{x}' or '\der{}{x}'
+\newcommand{\pder}[2]{\frac{\partial #1}{\partial #2}}
+
+% Big Union: first parameter is bottom and second is top
+% Usage: '\bu{n=1}{\infty}'
+\newcommand{\bu}[2]{\bigcup_{#1}^{#2}}
+
+% Big Square Union: first parameter is bottom and second is top
+% Usage: '\bsqu{n=1}{\infty}'
+\newcommand{\bsqu}[2]{\bigsqcup_{#1}^{#2}}
+
+% Big Intersection: first parameter is bottom and second is top
+% Usage: '\bi{n=1}{\infty}'
+\newcommand{\bi}[2]{\bigcap_{#1}^{#2}}
+
+% Commands for big brackets
+\renewcommand{\l}{\left}                                     
+\renewcommand{\r}{\right}
+
+% Double prime
+\newcommand{\pp}{{\prime\prime}}
+
+% Overline and underline
+\newcommand{\ol}{\overline}                                  
+\newcommand{\ul}{\underline}
+
+% Inner products
+\newcommand{\la}{\langle}                                    
+\newcommand{\ra}{\rangle}                     
+\newcommand{\inp}[2]{\la #1,#2\ra}                   % Usage: '\inp{f}{g}'
+
+% Weak convergence
+\newcommand{\wto}{\rightharpoonup}                   
+
+% Lebesgue outer measure
+\newcommand{\lom}{\mu^\ast}    
+
+% i.o., e.v.
+\newcommand{\io}{\text{ i.o.}}
+\newcommand{\ev}{\text{ e.v.}}
+
+% Subset and supset
+\newcommand{\sbs}{\subset}                                   
+\newcommand{\sps}{\supset}                    
+
+% Measurable space and measure space
+\newcommand{\sa}[2]{(#1,#2)}
+\newcommand{\sam}[3]{(#1,#2,#3)}              
+
+% QM commands
+\newcommand{\bra}[1]{\la #1|}                        % Bra
+\newcommand{\ket}[1]{|#1\ra}                         % Ket
+\newcommand{\braket}[2]{\la #1|#2\ra}         % Braket
+
+% Blackboard bold commands
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\pr}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Rs}{\mathbb{R}^\ast}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\RP}{\mathbb{RP}}
+\newcommand{\D}{\mathbb{D}}
+\renewcommand{\S}{\mathbb{S}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\A}{\mathbb{A}}
+\renewcommand{\P}{\mathbb{P}}
+
+% For changing space around \[\], align*, and in-line math
+\newcommand{\vm}{\vspace{-3mm}}
+\newcommand{\ds}{\displaystyle}
+
+% Greek letters
+\newcommand{\g}{\gamma}
+\renewcommand{\d}{\delta}
+\renewcommand{\a}{\alpha}
+\renewcommand{\b}{\beta}
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand{\e}{\epsilon}
+%\renewcommand{\phi}{\varphi}
+
+\newcommand{\ti}{\widetilde}
+\newcommand{\wh}{\widehat}
+
+\renewcommand{\sp}{\text{sp}}
+
+\newcommand{\Calg}{\textbf{C*-alg}}
+\newcommand{\Ab}{\textbf{Ab}}
+
+\renewcommand{\L}{\Lambda}
+
+\newcommand{\eV}{\text{ eV}}
+\newcommand{\MeV}{\text{ MeV}}
+\newcommand{\meV}{\;\mu\text{eV}}
+\newcommand{\J}{\text{ J}}
+
+\renewcommand{\mod}[1]{\;\;(\text{mod }#1)}
+
+\newcommand{\tl}{\triangleleft}
+
+\newcommand{\Sc}{\text{sc}}
+\newcommand{\Mp}{\text{mp}}
+
+\newcommand{\me}[2]{\mu_{#1}^{#2}}
+
+\newcommand{\indep}{\perp \!\!\! \perp}
+
+% Math Operators: Not really sure why I just don't make these into commands, but it works out well so I'm not changing it.
+\DeclareMathOperator*{\var}{Var}                     % Variance
+\DeclareMathOperator*{\cov}{Cov}                     % Covariance
+\DeclareMathOperator*{\corr}{Corr}                   % Correlation
+\DeclareMathOperator*{\rank}{rank}                   % Rank
+\DeclareMathOperator*{\nullity}{null}                % Nullity
+\DeclareMathOperator*{\Id}{Id}                       % Identity
+\DeclareMathOperator*{\Span}{span}                   % Span
+\renewcommand{\Im}{\text{Im}}
+\renewcommand{\Re}{\text{Re}}
+\DeclareMathOperator*{\tr}{Tr}                       % Trace
+\DeclareMathOperator*{\vol}{vol}                     % Volume
+\DeclareMathOperator*{\cl}{cl}                       % Closure
+\DeclareMathOperator*{\iso}{Iso}                     % Isometry Group
+\DeclareMathOperator*{\interior}{Int}
+\DeclareMathOperator*{\rad}{rad}
+\DeclareMathOperator*{\Res}{Res}
+\DeclareMathOperator*{\diag}{diag}
+\DeclareMathOperator*{\GL}{GL}
+\DeclareMathOperator*{\Hom}{Hom}
+\DeclareMathOperator*{\Ad}{Ad }
+\DeclareMathOperator*{\Tr}{Tr}
+\DeclareMathOperator*{\Inv}{Inv}
+\newcommand{\Invn}{{\Inv}_0}
+\DeclareMathOperator*{\Trig}{Trig}
+\DeclareMathOperator*{\Pol}{Pol}
+\DeclareMathOperator*{\Lin}{Lin}
+\DeclareMathOperator*{\Proj}{Proj}
+\DeclareMathOperator*{\Char}{char}
+\DeclareMathOperator*{\orb}{orb}
+\DeclareMathOperator*{\End}{End}
+
+% Mathematical Spaces
+\newcommand{\Mat}{\text{Mat}}
+
+% Random Distributions
+\newcommand{\Exp}{\text{Exp}}
+\newcommand{\Pois}{\text{Pois}}
+
+% Theorem, lemma, etc. settings; Usage: '\begin{lemma} / \end{lemma}'
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{summary}[theorem]{Summary}
+\newtheorem{properties}[theorem]{Properties}
+\newtheorem{note}[theorem]{Note}
+
+\title{KPZ Formula}
+\author{Alexander Byard}
+\date{\today}
+
+% -- Document starts here --
+\begin{document}
+
+\maketitle
+
+\section{Background for the KPZ Formula}
+
+\begin{definition}[Gaussian Free Field]
+The full plane GFF $\ol{X}$ is defined as a Gaussian random variable living in $\mc{S}^\p(\C)/\R$ with covariance
+\[\E\l[\l(\idd{\C}{}{f(x)\ol{X}(x)}{x}\r)\l(\idd{\C}{}{h(x)\ol{X}(x)}{x}\r)\r]=\im{\C^2}{}{f(x)h(y)\ln\l(\frac{1}{|x-y|}\r)}{d^2x\,d^2y}\]
+for all $f,h\in\mc{S}_0(\C)$.
+
+The GFF $X$ with vanishing mean on the unit circle is given by
+\[X(x)=\ol{X}(x)-\im{\C}{}{\ol{X}(x)}{\rho(d^2x)},\]
+where $\rho$ is the uniform probability measure on the unit circle. The GFF $X$ has covariance
+\[\E\l[\l(\idd{\C}{}{f(x)X(x)}{x}\r)\l(\idd{\C}{}{h(x)X(x)}{x}\r)\r]=\im{\C^2}{}{f(x)h(y)K(x,y)}{d^2x\,d^2y},\]
+where
+\[K(x,y)=\ln\l(\frac{1}{|x-y|}\r)+\ln(|x|_+)+\ln(|y|_+)\]
+and $|x|_+:=|x|\vee1$.
+\end{definition}
+
+\begin{definition}[GMC Measure]
+Let $\gamma\in(0,2)$. We denote by $X_\e$ the circle average approximation of the GFF $X$, i.e.
+\[X_\e(x)=\frac{1}{2\pi}\id{0}{2\pi}{X(x+\e e^{i\theta})}{\theta}.\]
+The GMC measure $M_\gamma(d^2x)$ is a random measure given by the following convergence in probability in the space of Radon measures:
+\[M_\gamma(d^2x):=\lim_{\e\to0}e^{\gamma X_\e(x)-\frac{\gamma^2}{2}\E[X_\e(x)^2]}g(x)d^2x,\]
+where $g$ is a conformal metric given by $g(x):=\frac{1}{|x|_+^4}$.
+\end{definition}
+
+\begin{definition}[Liouville Field]
+We define the Liouville field $\phi$ to be
+\[\phi=X+\frac{Q}{2}\ln(g)+c,\]
+where $Q=\frac{\gamma}{2}+\frac{2}{\gamma}$. Moreover, we consider the measure $\E^Q$ given by
+\[\E^Q[F(\phi)]:=\id{\R}{}{e^{-2Qc}\E\l[F\l(X+\frac{Q}{2}\ln(g)+c\r)\r]}{c},\]
+where $F\in\mc{S}^\p(\C)$.
+\end{definition}
+
+The measure $\E^Q$ satisfies the following change of coordinate formula:
+
+\begin{lemma}[Change of Coordinate Formula]\label{ChangeOfCoord}
+For any M\"obius transform $\psi$, we have for all $F\in\mc{S}^\p(\C)$ that
+\[\E^Q[F(\phi\circ\psi+Q\ln(|\psi^\p|))]=\E^Q[F(\phi)].\]
+\end{lemma}
+
+Next, let $\phi_\e$ be the circle average approximation of $\phi$, i.e.
+\[\phi_\e(x)=\frac{1}{2\pi}\id{0}{2\pi}{\phi(x+\e e^{i\theta})}{\theta},\]
+and consider the associated vertex operator
+\[V_{\a,\e}(x):=\e^{\frac{\a^2}{2}}e^{\a\phi_\e(x)}.\]
+We define the correlations of the vertex operators by
+\[\l\la\prod_{k=1}^NV_{\a_i}(z_i)\r\ra_{\gamma,\mu}:=\lim_{\e\to0}\l\la\prod_{k=1}^NV_{\a_i,\e}(z_i)\r\ra_{\gamma,\mu},\]
+where
+\[\l\la\prod_{k=1}^NV_{\a_i,\e}(z_i)\r\ra_{\gamma,\mu}:=2\E^Q\l[e^{-\mu\idd{\C}{}{V_{\gamma,\e}(x)}{x}}\prod_{k=1}^NV_{\a_k,\e}(z_k)\r].\]
+
+\begin{proposition}
+The limit
+\[\l\la\prod_{k=1}^NV_{\a_i}(z_i)\r\ra_{\gamma,\mu}:=\lim_{\e\to0}\l\la\prod_{k=1}^NV_{\a_i,\e}(z_i)\r\ra_{\gamma,\mu}\]
+exists and equals
+\[2\mu^{-s}\gamma^{-1}\Gamma(s)\prod_{1\leq i<j\leq N}\frac{1}{|z_i-z_j|^{\a_i\a_j}}\E\l[\l(\im{\C}{}{F(x,\bg{z})}{M_\gamma(d^2x)}\r)^{-s}\r],\]
+where $s:=\frac{\s{k=1}{N}\a_k-2Q}{\gamma}$, and  $F(x,\bg{z}):=\prod_{k=1}^N\l(\frac{|x|_+}{|x-z_k|}\r)^{\gamma\a_k}$.
+\end{proposition}
+
+\section{KPZ Formula}
+
+Given the facts above, we are ready to prove the KPZ formula.
+
+\begin{proposition}[KPZ Formula]
+For any M\"obius transform $\psi$, we have
+\[\l\la\prod_{k=1}^NV_{\a_k}(\psi(z_k))\r\ra=\prod_{k=1}^N|\psi^\p(z_k)|^{-2\Delta_{\a_k}}\l\la\prod_{k=1}^NV_{\a_k}(z_k)\r\ra,\]
+where $\Delta_\a=\frac{\a}{2}(Q-\frac{\a}{2})$ is the conformal weight.
+\end{proposition}
+
+\begin{proof}
+Let $\e>0$ and let
+\[F(\phi)=e^{-\mu\idd{\C}{}{\e^{\frac{\gamma^2}{2}}e^{\gamma\phi_\e(x)}}{x}}\prod_{k=1}^N\e^{\frac{\a_k^2}{2}}e^{\a_k\phi_\e(z_k)}.\]
+By the change of coordinate formula found in Lemma \ref{ChangeOfCoord}, for any M\"obius transform $\psi$ we have
+\begin{align*}
+\E^Q[F(\phi)]
+&=\E^Q\l[e^{-\mu\idd{\C}{}{\e^{\frac{\gamma^2}{2}}e^{\gamma\phi_\e(x)}}{x}}\prod_{k=1}^N\e^{\frac{\a_k^2}{2}}e^{\a_k\phi_\e(z_k)}\r]\\
+&=\E^Q\l[e^{-\mu\e^{\frac{\gamma^2}{2}}\idd{\C}{}{e^{\gamma(\phi\circ\psi)_\e(x)+\gamma Q\ln(|\psi^\p(x)|)_\e}}{x}}\prod_{k=1}^N\e^{\frac{\a_k^2}{2}}e^{\a_k(\phi\circ\psi)_\e(z_k)+\a_kQ\ln(|\psi^\p(z_k)|)_\e}\r]\\
+&=\E^Q[F(\phi\circ\psi+Q\ln(|\psi^\p|))].
+\end{align*}
+For small $\e$ we have $\ln(|\psi^\p(x)|)_\e\approx\ln(|\psi^\p(x)|)$. Moreover, notice that for any $\a$ we have
+\[\a Q=2\frac{\a}{2}Q-\frac{\a^2}{2}+\frac{\a^2}{2}=2\frac{\a}{2}\l(Q-\frac{\a}{2}\r)+\frac{\a^2}{2}=2\Delta_\a+\frac{\a^2}{2}.\]
+Hence, it follows that
+\begin{align*}
+\E^Q[F(\phi)]
+&=\E^Q\l[e^{-\mu\idd{\C}{}{\e^{\frac{\gamma^2}{2}}e^{\gamma\phi_\e(x)}}{x}}\prod_{k=1}^N\e^{\frac{\a_k^2}{2}}e^{\a_k\phi_\e(z_k)}\r]\\
+&\approx\E^Q\l[e^{-\mu\e^{\frac{\gamma^2}{2}}\idd{\C}{}{e^{\gamma(\phi\circ\psi)_\e(x)+\gamma Q\ln(|\psi^\p(x)|)}}{x}}\prod_{k=1}^N\e^{\frac{\a_k^2}{2}}e^{\a_k(\phi\circ\psi)_\e(z_k)+\a_kQ\ln(|\psi^\p(z_k)|)}\r]\\
+&=\E^Q\l[e^{-\mu\e^{\frac{\gamma^2}{2}}\idd{\C}{}{e^{\gamma(\phi\circ\psi)_\e(x)+\ln(|\psi^\p(x)|^{\gamma Q})}}{x}}\prod_{k=1}^N\e^{\frac{\a_k^2}{2}}e^{\a_k(\phi\circ\psi)_\e(z_k)+\ln(|\psi^\p(z_k)|^{\a_kQ})}\r]\\
+&=\E^Q\l[e^{-\mu\e^{\frac{\gamma^2}{2}}\idd{\C}{}{e^{\gamma(\phi\circ\psi)_\e(x)}|\psi^\p(x)|^{\gamma Q}}{x}}\prod_{k=1}^N\e^{\frac{\a_k^2}{2}}e^{\a_k(\phi\circ\psi)_\e(z_k)}|\psi^\p(z_k)|^{\a_kQ}\r]\\
+&=\E^Q\l[e^{-\mu\e^{\frac{\gamma^2}{2}}\idd{\C}{}{e^{\gamma(\phi\circ\psi)_\e(x)}|\psi^\p(x)|^{2\Delta_\gamma+\frac{\gamma^2}{2}}}{x}}\prod_{k=1}^N\e^{\frac{\a_k^2}{2}}e^{\a_k(\phi\circ\psi)_\e(z_k)}|\psi^\p(z_k)|^{2\Delta_{\a_k}+\frac{\a_k^2}{2}}\r].
+\end{align*}
+Rearranging, we obtain the following expression for $\E^Q[F(\phi)]$:
+\begingroup\makeatletter\def\f@size{9.5}\check@mathfonts
+\[\l(\prod_{k=1}^N|\psi^\p(z_k)|^{2\Delta_{\a_k}}\r)\E^Q\l[e^{-\mu\idd{\C}{}{(|\psi^\p(x)|\e)^{\frac{\gamma^2}{2}}e^{\gamma(\phi\circ\psi)_\e(x)}|\psi^\p(x)|^{2\Delta_\gamma}}{x}}\prod_{k=1}^N(|\psi^\p(z_k)|\e)^{\frac{\a_k^2}{2}}e^{\a_k(\phi\circ\psi)_\e(z_k)}\r].\]
+\endgroup
+By definition of circle average we have
+\[(\phi\circ\psi)_\e(x)\approx\phi_{|\psi^\p(x)|\e}(\psi(x)).\]
+In particular, using $\Delta_\gamma=1$ we obtain
+\begin{align*}
+\idd{\C}{}{(|\psi^\p(x)|\e)^{\frac{\gamma^2}{2}}e^{\gamma(\phi\circ\psi)_\e(x)}|\psi^\p(x)|^{2\Delta_\gamma}}{x}
+&=\idd{\C}{}{(|\psi^\p(x)|\e)^{\frac{\gamma^2}{2}}e^{\gamma(\phi\circ\psi)_\e(x)}|\psi^\p(x)|^2}{x}\\
+&\approx\idd{\C}{}{(|\psi^\p(x)|\e)^{\frac{\gamma^2}{2}}e^{\gamma\phi_{|\psi^\p(x)|\e}(\psi(x))}|\psi^\p(x)|^2}{x}\\
+&=\idd{\C}{}{(|\psi^\p(\psi^{-1}(u))|\e)^{\frac{\gamma^2}{2}}e^{\gamma\phi_{|\psi^\p(\psi^{-1}(u))|\e}(u)}}{u}\\
+&\stackrel{\e\to0}{\to}M_\gamma(\C)
+\end{align*}
+by a change of variable $\e_u=|\psi^\p(\psi^{-1}(u))|\e$ as $\e\to0$. Using $(\phi\circ\psi)_\e(z_k)\approx\phi_{|\psi^\p(z_k)|_\e}(\psi(z_k))$ and a change of variable $\e_k=|\psi^\p(z_k)|\e$ at each vertex operator, we find
+\begingroup\makeatletter\def\f@size{9.5}\check@mathfonts
+\begin{align*}
+\l(\prod_{k=1}^N|\psi^\p(z_k)|^{2\Delta_{\a_k}}\r)&\E^Q\l[e^{-\mu\idd{\C}{}{(|\psi^\p(x)|\e)^{\frac{\gamma^2}{2}}e^{\gamma(\phi\circ\psi)_\e(x)}|\psi^\p(x)|^{2\Delta_\gamma}}{x}}\prod_{k=1}^N(|\psi^\p(z_k)|\e)^{\frac{\a_k^2}{2}}e^{\a_k(\phi\circ\psi)_\e(z_k)}\r]\\
+&\stackrel{\e\to0}{\to}\frac{1}{2}\l(\prod_{k=1}^N|\psi^\p(z_k)|^{2\Delta\a_k}\r)\l\la\prod_{k=1}^NV_{\a_k}(\psi(z_k))\r\ra.
+\end{align*}
+\endgroup
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
